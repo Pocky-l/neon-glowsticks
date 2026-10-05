@@ -1,0 +1,18 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "neon_glowsticks:item/glowstick_3d",
+    "textures": {
+      "stick": "neon_glowsticks:item/white_glowstick_model"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "neon_glowsticks:item/white_glowstick"
+      }
+    }
+  }
+}

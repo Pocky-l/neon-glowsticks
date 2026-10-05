@@ -1,0 +1,14 @@
+{
+  "glowstick.crack": {
+    "subtitle": "subtitles.neon_glowsticks.glowstick.crack",
+    "sounds": ["neon_glowsticks:crack1", "neon_glowsticks:crack2", "neon_glowsticks:crack3"]
+  },
+  "glowstick.bounce": {
+    "subtitle": "subtitles.neon_glowsticks.glowstick.bounce",
+    "sounds": ["neon_glowsticks:bounce1", "neon_glowsticks:bounce2", "neon_glowsticks:bounce3", "neon_glowsticks:bounce4"]
+  },
+  "glowstick.fizzle": {
+    "subtitle": "subtitles.neon_glowsticks.glowstick.fizzle",
+    "sounds": ["neon_glowsticks:fizzle"]
+  }
+}
