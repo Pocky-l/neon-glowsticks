@@ -89,7 +89,6 @@ The jar is written to `build/libs/`.
 ## Credits
 
 - Author: **Pocky**.
-- Based on Pocky's [Glowstick](https://www.curseforge.com/hytale/mods/glowstick) mod for Hytale.
 - Sound effects are built from royalty-free sources: [Kenney](https://kenney.nl)'s Impact and Interface packs (CC0)
   and the OpenGameArt upload "Swishes Sound Pack" (CC0).
 

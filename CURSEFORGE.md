@@ -39,7 +39,7 @@ glow, but blocks around them are not lit.
 
 ## Credits
 
-Made by **Pocky**. Based on Pocky's [Glowstick](https://www.curseforge.com/hytale/mods/glowstick) mod for Hytale. Source code: [GitHub](https://github.com/Pocky-l/neon-glowsticks)
+Made by **Pocky**. Source code: [GitHub](https://github.com/Pocky-l/neon-glowsticks)
 
 <!-- more-mods:start -->
 <!-- more-mods:end -->
