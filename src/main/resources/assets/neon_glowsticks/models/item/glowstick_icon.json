@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "neon_glowsticks:item/glowstick_tube",
+    "layer1": "neon_glowsticks:item/glowstick_parts"
+  }
+}

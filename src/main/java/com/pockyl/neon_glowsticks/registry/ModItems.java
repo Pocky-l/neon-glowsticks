@@ -9,19 +9,15 @@ import com.pockyl.neon_glowsticks.NeonGlowsticks;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(NeonGlowsticks.MOD_ID);
 
-    // Declared before the items: their initializers fill it.
-    private static final Map<GlowColor, DeferredItem<GlowstickItem>> BY_COLOR = new EnumMap<>(GlowColor.class);
-
-    public static final DeferredItem<GlowstickItem> RED_GLOWSTICK = glowstickItem(GlowColor.RED);
-    public static final DeferredItem<GlowstickItem> GREEN_GLOWSTICK = glowstickItem(GlowColor.GREEN);
-    public static final DeferredItem<GlowstickItem> BLUE_GLOWSTICK = glowstickItem(GlowColor.BLUE);
-    public static final DeferredItem<GlowstickItem> WHITE_GLOWSTICK = glowstickItem(GlowColor.WHITE);
+    /** One glowstick per color, registered as {@code <color>_glowstick}. */
+    public static final Map<GlowColor, DeferredItem<GlowstickItem>> GLOWSTICKS = registerGlowsticks();
 
     private ModItems() {
     }
@@ -31,13 +27,15 @@ public final class ModItems {
     }
 
     public static GlowstickItem glowstick(GlowColor color) {
-        return BY_COLOR.get(color).get();
+        return GLOWSTICKS.get(color).get();
     }
 
-    private static DeferredItem<GlowstickItem> glowstickItem(GlowColor color) {
-        DeferredItem<GlowstickItem> item = ITEMS.register(color.getSerializedName() + "_glowstick",
-                () -> new GlowstickItem(color, new Item.Properties().stacksTo(32)));
-        BY_COLOR.put(color, item);
-        return item;
+    private static Map<GlowColor, DeferredItem<GlowstickItem>> registerGlowsticks() {
+        Map<GlowColor, DeferredItem<GlowstickItem>> items = new EnumMap<>(GlowColor.class);
+        for (GlowColor color : GlowColor.values()) {
+            items.put(color, ITEMS.register(color.getSerializedName() + "_glowstick",
+                    () -> new GlowstickItem(color, new Item.Properties().stacksTo(32))));
+        }
+        return Collections.unmodifiableMap(items);
     }
 }
