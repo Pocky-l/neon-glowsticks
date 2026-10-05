@@ -14,7 +14,6 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.slf4j.Logger;
 
 import com.pockyl.neon_glowsticks.item.GlowColor;
-import com.pockyl.neon_glowsticks.registry.ModBlocks;
 import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModEntities;
 import com.pockyl.neon_glowsticks.registry.ModItems;
@@ -27,7 +26,6 @@ public final class NeonGlowsticks {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public NeonGlowsticks(IEventBus modBus, ModContainer container) {
-        ModBlocks.register(modBus);
         ModItems.register(modBus);
         ModEntities.register(modBus);
         ModDataComponents.register(modBus);

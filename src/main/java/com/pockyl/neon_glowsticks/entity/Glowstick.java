@@ -1,6 +1,5 @@
 package com.pockyl.neon_glowsticks.entity;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +31,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import com.pockyl.neon_glowsticks.Config;
-import com.pockyl.neon_glowsticks.block.GlowLightBlock;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
 import com.pockyl.neon_glowsticks.registry.ModDataComponents;
@@ -40,11 +38,9 @@ import com.pockyl.neon_glowsticks.registry.ModEntities;
 import com.pockyl.neon_glowsticks.registry.ModItems;
 import com.pockyl.neon_glowsticks.registry.ModSounds;
 
-import java.util.Objects;
-
 /**
  * A cracked glowstick in the world. It flies, bounces off blocks and mobs, rolls and comes to rest lying on one of its
- * flat sides, keeps an invisible light block next to itself and burns out after a while. Players pick it up with
+ * flat sides, and burns out after a while; its light is rendered by the client (see {@code DynamicLights}). Players pick it up with
  * right-click and knock it around with left-click.
  * <p>
  * The physics run on both sides, so the client sees a smooth simulation instead of interpolated server positions; the
@@ -64,16 +60,11 @@ public final class Glowstick extends Projectile {
     private static final double BOUNCE_SOUND_IMPACT = 0.12;
     private static final int ENTITY_HIT_COOLDOWN = 10;
     private static final int GLOW_SYNC_INTERVAL = 20;
-    private static final int LIGHT_REFRESH_INTERVAL = 10;
 
     private static final EntityDataAccessor<Byte> COLOR = SynchedEntityData.defineId(Glowstick.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Integer> GLOW_LEFT = SynchedEntityData.defineId(Glowstick.class, EntityDataSerializers.INT);
 
     private int glowLeft = Integer.MAX_VALUE;
-    /** Server only: where this stick's light block is, if any. */
-    @Nullable
-    private BlockPos lightPos;
-    private int lastLight;
     private int lastHitEntity = -1;
     private int lastHitTick;
 
@@ -145,28 +136,12 @@ public final class Glowstick extends Projectile {
         return Mth.clamp(glowLeft / (float) FADE_TICKS, 0.0F, 1.0F);
     }
 
-    /** Block light this stick gives; dims with {@link #brightness()} but stays at least 1 until it is out. */
+    /** Client only: light level of this stick; dims with {@link #brightness()} but stays at least 1 until it is out. */
     public int lightLevel() {
         if (glowLeft <= 0) {
             return 0;
         }
         return Math.max(1, Math.round(Config.lightLevel() * (0.4F + 0.6F * brightness())));
-    }
-
-    @Nullable
-    public BlockPos lightPos() {
-        return lightPos;
-    }
-
-    /** Brightest light claimed for {@code pos} by living sticks nearby, 0 if none claims it. */
-    public static int lightClaimedAt(Level level, BlockPos pos) {
-        int light = 0;
-        for (Glowstick stick : level.getEntitiesOfClass(Glowstick.class, new AABB(pos).inflate(2), Entity::isAlive)) {
-            if (pos.equals(stick.lightPos)) {
-                light = Math.max(light, stick.lightLevel());
-            }
-        }
-        return light;
     }
 
     /** The item this stick turns back into when picked up, remembering how much glow is left. */
@@ -211,7 +186,6 @@ public final class Glowstick extends Projectile {
         if (glowLeft % GLOW_SYNC_INTERVAL == 0) {
             entityData.set(GLOW_LEFT, glowLeft);
         }
-        updateLight();
     }
 
     /** Moves the stick for one tick; returns how hard it hit something. */
@@ -294,49 +268,6 @@ public final class Glowstick extends Projectile {
     public void lerpMotion(double x, double y, double z) {
         if (new Vec3(x, y, z).distanceTo(getDeltaMovement()) > 0.3) {
             super.lerpMotion(x, y, z);
-        }
-    }
-
-    // ------------------------------------------------------------------------------------------------
-    // Light
-    // ------------------------------------------------------------------------------------------------
-
-    private void updateLight() {
-        int light = Config.lightBlocks() ? lightLevel() : 0;
-        BlockPos target = light > 0 ? findLightPos() : null;
-        if (!Objects.equals(target, lightPos)) {
-            BlockPos old = lightPos;
-            // Claim the new spot first, so releasing the old one sees the current state.
-            lightPos = target;
-            if (old != null) {
-                GlowLightBlock.release(level(), old);
-            }
-            if (target != null) {
-                GlowLightBlock.place(level(), target, light);
-            }
-        } else if (target != null && (light != lastLight || tickCount % LIGHT_REFRESH_INTERVAL == 0)) {
-            GlowLightBlock.place(level(), target, light);
-        }
-        lastLight = light;
-    }
-
-    /** The block the stick is in, or the one above when that one is taken (e.g. by grass or snow layers). */
-    @Nullable
-    private BlockPos findLightPos() {
-        BlockPos pos = BlockPos.containing(getX(), getY() + 0.1, getZ());
-        if (GlowLightBlock.canHost(level().getBlockState(pos))) {
-            return pos;
-        }
-        BlockPos above = pos.above();
-        return GlowLightBlock.canHost(level().getBlockState(above)) ? above : null;
-    }
-
-    @Override
-    public void remove(RemovalReason reason) {
-        super.remove(reason);
-        // Unloaded sticks keep their light: they come back with the chunk.
-        if (!level().isClientSide() && reason.shouldDestroy() && lightPos != null) {
-            GlowLightBlock.release(level(), lightPos);
         }
     }
 
