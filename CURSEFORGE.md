@@ -2,6 +2,10 @@
 
 Throwable glowsticks that bounce, roll and light up the dark with colored light.
 
+![Thrown glowsticks light up a cave in their own colors](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/screenshots/cave.jpg)
+
+*Thrown glowsticks light up a cave in their own colors*
+
 ## Features
 
 - **16 glowsticks**: one for every dye color, with 3D models in hand and on the ground. The black one glows
