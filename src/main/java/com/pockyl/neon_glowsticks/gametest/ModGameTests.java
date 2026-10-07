@@ -17,6 +17,7 @@ import com.pockyl.neon_glowsticks.NeonGlowsticks;
 import com.pockyl.neon_glowsticks.entity.Glowstick;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
+import com.pockyl.neon_glowsticks.light.ColorMixing;
 import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModItems;
 
@@ -101,6 +102,20 @@ public final class ModGameTests {
         for (int y = 2; y <= 5; y++) {
             helper.setBlock(1, y, 1, Blocks.AIR);
         }
+    }
+
+    @GameTest(template = "empty", batch = "lightColorsMixAdditively")
+    public static void lightColorsMixAdditively(GameTestHelper helper) {
+        // Equal red and green light: the average is (0.5, 0.5, 0); added like light it is yellow.
+        float[] mix = {0.5F, 0.5F, 0.0F};
+        ColorMixing.additive(mix);
+        helper.assertTrue(mix[0] == 1.0F && mix[1] == 1.0F && mix[2] == 0.0F,
+                "red + green light make yellow, got " + mix[0] + ", " + mix[1] + ", " + mix[2]);
+
+        float[] single = {1.0F, 0.16F, 0.12F};
+        ColorMixing.additive(single);
+        helper.assertTrue(single[0] == 1.0F && single[1] == 0.16F && single[2] == 0.12F, "a single bright color stays the same");
+        helper.succeed();
     }
 
     private static Glowstick stick(GameTestHelper helper, GlowColor color, Vec3 relative) {

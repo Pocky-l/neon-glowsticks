@@ -34,8 +34,9 @@ config. Both are editable from the in-game mod list.
 
 ## Compatibility
 
-Mods that replace the chunk renderer (Sodium, Embeddium) bypass the light: the game keeps working and the sticks still
-glow, but blocks around them are not lit.
+Works with [Sodium](https://modrinth.com/mod/sodium), colored light included. Other mods that replace the chunk
+renderer (such as Embeddium) may bypass the light: the game keeps working and the sticks still glow, but blocks around
+them may not be lit.
 
 ## Requirements
 

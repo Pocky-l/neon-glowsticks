@@ -68,9 +68,11 @@ Client config (`config/neon_glowsticks-client.toml`):
 
 ## Compatibility
 
-The light hooks into Minecraft's own block and entity rendering. Mods that replace the chunk renderer (such as
-Sodium or Embeddium) bypass it: the game keeps working, the glowsticks still glow and have their halo, but blocks
-around them are not lit. The game log says which light hooks are active.
+The light hooks into Minecraft's own block and entity rendering and into
+[Sodium](https://modrinth.com/mod/sodium)'s chunk renderer, so with Sodium the light is colored too. Other mods
+that replace the chunk renderer (such as Embeddium) may bypass it: the game keeps working, the glowsticks still glow
+and have their halo, but blocks around them may not be lit or colored. The game log says which light hooks are
+active.
 
 ## Installation
 

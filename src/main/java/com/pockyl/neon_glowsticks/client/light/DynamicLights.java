@@ -19,6 +19,7 @@ import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
 import com.pockyl.neon_glowsticks.entity.Glowstick;
 import com.pockyl.neon_glowsticks.item.GlowColor;
+import com.pockyl.neon_glowsticks.light.ColorMixing;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -161,10 +162,12 @@ public final class DynamicLights {
         if (total < 0.01F) {
             return;
         }
+        float[] mix = {r / total, g / total, b / total};
+        ColorMixing.additive(mix);
         float amount = Math.min(1.0F, total * Config.coloredLightStrength()) * (1.0F - 0.5F * sky / 15.0F);
-        out[offset] = 1.0F - amount * (1.0F - r / total);
-        out[offset + 1] = 1.0F - amount * (1.0F - g / total);
-        out[offset + 2] = 1.0F - amount * (1.0F - b / total);
+        out[offset] = 1.0F - amount * (1.0F - mix[0]);
+        out[offset + 1] = 1.0F - amount * (1.0F - mix[1]);
+        out[offset + 2] = 1.0F - amount * (1.0F - mix[2]);
     }
 
     private static int floor(float value) {
