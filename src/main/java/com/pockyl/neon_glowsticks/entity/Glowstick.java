@@ -133,15 +133,28 @@ public final class Glowstick extends Projectile {
 
     /** 1 while fresh, dimming to 0 over the last {@link #FADE_TICKS}. */
     public float brightness() {
+        return brightness(glowLeft);
+    }
+
+    /** 1 while fresh, dimming to 0 over the last {@link #FADE_TICKS} of {@code glowLeft}. */
+    public static float brightness(int glowLeft) {
         return Mth.clamp(glowLeft / (float) FADE_TICKS, 0.0F, 1.0F);
     }
 
     /** Client only: light level of this stick; dims with {@link #brightness()} but stays at least 1 until it is out. */
     public int lightLevel() {
+        return lightLevel(Config.lightLevel(), glowLeft);
+    }
+
+    /**
+     * Light level of a stick with {@code glowLeft} ticks of glow that gives {@code fullLevel} while fresh: dims to 40% at
+     * the end but stays at least 1 until it is out. Used for thrown and held sticks alike.
+     */
+    public static int lightLevel(int fullLevel, int glowLeft) {
         if (glowLeft <= 0) {
             return 0;
         }
-        return Math.max(1, Math.round(Config.lightLevel() * (0.4F + 0.6F * brightness())));
+        return Math.max(1, Math.round(fullLevel * (0.4F + 0.6F * brightness(glowLeft))));
     }
 
     /** The item this stick turns back into when picked up, remembering how much glow is left. */

@@ -35,8 +35,12 @@
   "neon_glowsticks.configuration.coloredLight.tooltip": "Tint the light of glowsticks with their color.",
   "neon_glowsticks.configuration.coloredLightStrength": "Colored light strength",
   "neon_glowsticks.configuration.coloredLightStrength.tooltip": "How strongly the light is tinted.",
+  "neon_glowsticks.configuration.heldLight": "Light from held glowsticks",
+  "neon_glowsticks.configuration.heldLight.tooltip": "A glowstick held in a hand lights up the area around whoever holds it: you, other players and mobs.",
+  "neon_glowsticks.configuration.heldLightLevel": "Held light level",
+  "neon_glowsticks.configuration.heldLightLevel.tooltip": "Light level of a glowstick held in a hand. Held glowsticks count towards the max glowstick lights.",
   "neon_glowsticks.configuration.halo": "Halo",
   "neon_glowsticks.configuration.halo.tooltip": "Draw a soft glow around glowsticks.",
   "neon_glowsticks.configuration.maxLights": "Max glowstick lights",
-  "neon_glowsticks.configuration.maxLights.tooltip": "At most this many glowsticks (the nearest ones) give light at once. Each moving light re-renders the chunks around it, so lower this on weak computers."
+  "neon_glowsticks.configuration.maxLights.tooltip": "At most this many glowsticks (your own held ones first, then the nearest ones) give light at once. Each moving light re-renders the chunks around it, so lower this on weak computers."
 }

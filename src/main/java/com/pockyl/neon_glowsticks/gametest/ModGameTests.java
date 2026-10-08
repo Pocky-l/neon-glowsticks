@@ -18,8 +18,11 @@ import com.pockyl.neon_glowsticks.entity.Glowstick;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
 import com.pockyl.neon_glowsticks.light.ColorMixing;
+import com.pockyl.neon_glowsticks.light.LightPriority;
 import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModItems;
+
+import java.util.List;
 
 /**
  * In-game tests, run headless by {@code gradlew runGameTestServer}.
@@ -115,6 +118,28 @@ public final class ModGameTests {
         float[] single = {1.0F, 0.16F, 0.12F};
         ColorMixing.additive(single);
         helper.assertTrue(single[0] == 1.0F && single[1] == 0.16F && single[2] == 0.12F, "a single bright color stays the same");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", batch = "ownAndNearestLightsArePreferred")
+    public static void ownAndNearestLightsArePreferred(GameTestHelper helper) {
+        // Sources as distances from the camera; negative ones are the player's own glowsticks.
+        List<Double> sources = List.of(3.0, 9.0, -20.0, 1.0, 5.0);
+        List<Double> chosen = LightPriority.select(sources, distance -> distance < 0, Math::abs, 3);
+        helper.assertTrue(chosen.equals(List.of(-20.0, 1.0, 3.0)), "the own light first, then the nearest ones, got " + chosen);
+        helper.assertTrue(LightPriority.select(sources, distance -> false, Math::abs, 10).size() == sources.size(),
+                "all lights are kept under the limit");
+        helper.assertTrue(sources.equals(List.of(3.0, 9.0, -20.0, 1.0, 5.0)), "the input is left untouched");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", batch = "dimmingSticksGiveLessLight")
+    public static void dimmingSticksGiveLessLight(GameTestHelper helper) {
+        helper.assertTrue(Glowstick.lightLevel(11, Glowstick.FADE_TICKS * 5) == 11, "a fresh stick gives its full light");
+        int dimming = Glowstick.lightLevel(11, Glowstick.FADE_TICKS / 4);
+        helper.assertTrue(dimming < 11 && dimming >= 4, "a dimming stick gives less light, got " + dimming);
+        helper.assertTrue(Glowstick.lightLevel(11, 1) >= 1, "a stick about to go out still glows");
+        helper.assertTrue(Glowstick.lightLevel(11, 0) == 0, "a spent stick gives no light");
         helper.succeed();
     }
 

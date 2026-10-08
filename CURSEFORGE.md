@@ -17,6 +17,9 @@ Throwable glowsticks that bounce, roll and light up the dark with colored light.
 - **Colored dynamic light**: a thrown glowstick lights up the area around it in its color. The light spreads like
   vanilla light (walls block it), blends with Minecraft's smooth shading, lights up mobs and players and follows the
   stick while it flies, rolls or sinks. A soft halo glows around the stick.
+- **Glows in your hand**: a glowstick held in either hand lights up the area around whoever holds it (you, other
+  players and mobs), so you can walk through a cave with one in hand. It is a bit weaker than a thrown stick and
+  holding it never uses up its glow.
 - **Client-side light**: nothing is placed in the world, so it is safe for servers and other mods. It does not stop
   mobs from spawning.
 - **Burns out**: a glowstick glows for 10 minutes, dims during the last minute and goes out with a puff of smoke.
@@ -29,8 +32,8 @@ Shapeless: **Copper Ingot** + **Glowstone Dust** or **Glow Ink Sac** + any **Dye
 
 ## Configuration
 
-Glow time is in the common config; light level, color strength, the number of lights and the halo are in the client
-config. Both are editable from the in-game mod list.
+Glow time is in the common config; light level, held light, color strength, the number of lights and the halo are in
+the client config. Both are editable from the in-game mod list.
 
 ## Compatibility
 

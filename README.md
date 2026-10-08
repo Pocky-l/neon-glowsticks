@@ -27,6 +27,11 @@
   default). The light spreads like vanilla light, so walls block it, blends smoothly with Minecraft's shading, lights
   up mobs and players too, and follows the stick while it flies, rolls or sinks. Several colors mix where their light
   meets. A soft halo glows around the stick itself.
+- **Glows in your hand** — a glowstick held in the main hand or off hand lights up the area around whoever holds it:
+  you, other players and mobs (a zombie or an allay carrying one). The light follows the holder, so you can walk
+  through a cave with a glowstick in hand. It is a bit weaker than a thrown stick's (light level 11 by default) and
+  holding a stick never uses up its glow; a picked-up stick that was already dimming stays dim. Holders in lava,
+  invisible ones and spectators give no light.
 - **Client-side light** — the light is computed by each player's game and nothing is placed in the world, so it is
   safe for servers and other mods. It does not stop mobs from spawning.
 - **Burns out** — a glowstick glows for 10 minutes, dims during the last minute and goes out with a puff of smoke.
@@ -63,7 +68,9 @@ Client config (`config/neon_glowsticks-client.toml`):
 | `lightLevel` | 13 | light level of a glowstick |
 | `coloredLight` | true | tint the light with the glowstick's color |
 | `coloredLightStrength` | 1.0 | how strong the tint is |
-| `maxLights` | 32 | how many of the nearest glowsticks give light at once |
+| `maxLights` | 32 | how many of the nearest glowsticks give light at once (held ones included; your own comes first) |
+| `heldLight` | true | glowsticks held in a hand give light |
+| `heldLightLevel` | 11 | light level of a glowstick held in a hand |
 | `halo` | true | soft glow around the sticks |
 
 ## Compatibility
