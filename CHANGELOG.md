@@ -4,6 +4,14 @@ All notable changes to this mod are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1+1.20.1] - Unreleased
+### Changed
+- Ported to Minecraft 1.20.1 (Forge).
+- With [Embeddium](https://www.curseforge.com/minecraft/mc-mods/embeddium) installed, blocks around glowsticks are lit
+  and colored by their light (on 1.21.1 the same works with Sodium).
+- The settings are edited in the config files (`config/neon_glowsticks-common.toml` and
+  `config/neon_glowsticks-client.toml`); Forge 1.20.1 has no in-game config screen for them.
+
 ## [1.0.1] - 2026-10-07
 ### Fixed
 - With [Sodium](https://modrinth.com/mod/sodium) installed, blocks around glowsticks were lit but not colored; the

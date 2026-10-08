@@ -10,10 +10,17 @@
 
 <p align="center">
   <a href="https://www.curseforge.com/minecraft/mc-mods/neon-glowsticks"><img alt="CurseForge downloads" src="https://img.shields.io/curseforge/dt/1727688?logo=curseforge&label=CurseForge&color=F16436"></a>
-  <img alt="Minecraft 1.21.1" src="https://img.shields.io/badge/Minecraft-1.21.1-62B47A">
-  <a href="https://neoforged.net"><img alt="NeoForge" src="https://img.shields.io/badge/Loader-NeoForge-F16436"></a>
+  <img alt="Minecraft 1.20.1" src="https://img.shields.io/badge/Minecraft-1.20.1-62B47A">
+  <a href="https://files.minecraftforge.net"><img alt="Forge" src="https://img.shields.io/badge/Loader-Forge-DFA86A"></a>
   <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-blue">
 </p>
+
+## Versions
+
+| Minecraft | Loader | Branch |
+|---|---|---|
+| 1.21.1 | [NeoForge](https://neoforged.net) | [`main`](https://github.com/Pocky-l/neon-glowsticks/tree/main) |
+| 1.20.1 | [Forge](https://files.minecraftforge.net) | [`1.20.1`](https://github.com/Pocky-l/neon-glowsticks/tree/1.20.1) |
 
 ## Features
 
@@ -50,7 +57,7 @@ In creative mode the glowsticks are in the **Pocky Mods** and **Tools & Utilitie
 
 ## Configuration
 
-Common config (`config/neon_glowsticks-common.toml`, also editable from the in-game mod list):
+Common config (`config/neon_glowsticks-common.toml`):
 
 | Option | Default | |
 |---|---|---|
@@ -69,14 +76,14 @@ Client config (`config/neon_glowsticks-client.toml`):
 ## Compatibility
 
 The light hooks into Minecraft's own block and entity rendering and into
-[Sodium](https://modrinth.com/mod/sodium)'s chunk renderer, so with Sodium the light is colored too. Other mods
-that replace the chunk renderer (such as Embeddium) may bypass it: the game keeps working, the glowsticks still glow
-and have their halo, but blocks around them may not be lit or colored. The game log says which light hooks are
+[Embeddium](https://www.curseforge.com/minecraft/mc-mods/embeddium)'s chunk renderer, so with Embeddium the light is
+colored too. Other mods that replace the chunk renderer may bypass it: the game keeps working, the glowsticks still
+glow and have their halo, but blocks around them may not be lit or colored. The game log says which light hooks are
 active.
 
 ## Installation
 
-1. Install [NeoForge](https://neoforged.net) for Minecraft 1.21.1.
+1. Install [Forge](https://files.minecraftforge.net) for Minecraft 1.20.1.
 2. Put this mod into the `mods` folder.
 
 The mod is needed on both the client and the server.
