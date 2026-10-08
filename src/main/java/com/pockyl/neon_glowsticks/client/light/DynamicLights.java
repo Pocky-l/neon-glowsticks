@@ -10,10 +10,10 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
@@ -42,7 +42,7 @@ import java.util.Map;
  * it reaches are re-meshed. Chunk meshing runs on worker threads, so the sources are published as an immutable
  * snapshot.
  */
-@EventBusSubscriber(modid = NeonGlowsticks.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = NeonGlowsticks.MOD_ID, value = Dist.CLIENT)
 public final class DynamicLights {
     /** Re-run the flood fill this often, to notice placed or broken blocks. */
     private static final int REFRESH_INTERVAL = 20;
@@ -181,7 +181,10 @@ public final class DynamicLights {
 
     // Never let the light break the game: on any error the lights are dropped and the problem is logged once.
     @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
         try {
             update();
         } catch (RuntimeException e) {

@@ -1,8 +1,8 @@
 package com.pockyl.neon_glowsticks.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -10,24 +10,24 @@ import net.minecraft.util.StringUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.entity.Glowstick;
-import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModSounds;
 
 import java.util.List;
 
 /** A glowstick: use to crack and throw it, sneak-use to drop it at your feet. Dispensers shoot it too. */
-public final class GlowstickItem extends Item implements ProjectileItem {
+public final class GlowstickItem extends Item {
     public static final float THROW_POWER = 0.9F;
     public static final float DROP_POWER = 0.3F;
+    /** Item tag with the ticks of glow left in a stick that was thrown and picked up again; fresh sticks do not have it. */
+    public static final String GLOW_LEFT_TAG = "GlowLeft";
     private static final int COOLDOWN_TICKS = 4;
 
     private final GlowColor color;
@@ -43,8 +43,19 @@ public final class GlowstickItem extends Item implements ProjectileItem {
 
     /** Ticks of glow the stick has: a fresh one has the full configured time. */
     public static int glowLeft(ItemStack stack) {
-        Integer left = stack.get(ModDataComponents.GLOW_LEFT.get());
+        Integer left = storedGlowLeft(stack);
         return left != null ? left : Config.glowTicks();
+    }
+
+    /** The remaining glow saved on a picked-up stick, or null for a fresh one. */
+    @Nullable
+    public static Integer storedGlowLeft(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        return tag != null && tag.contains(GLOW_LEFT_TAG, Tag.TAG_INT) ? tag.getInt(GLOW_LEFT_TAG) : null;
+    }
+
+    public static void setGlowLeft(ItemStack stack, int ticks) {
+        stack.getOrCreateTag().putInt(GLOW_LEFT_TAG, ticks);
     }
 
     @Override
@@ -60,24 +71,21 @@ public final class GlowstickItem extends Item implements ProjectileItem {
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         player.getCooldowns().addCooldown(this, COOLDOWN_TICKS);
-        stack.consume(1, player);
+        if (!player.getAbilities().instabuild) {
+            stack.shrink(1);
+        }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
     @Override
-    public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
-        return Glowstick.at(level, pos, stack);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        Integer left = stack.get(ModDataComponents.GLOW_LEFT.get());
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        Integer left = storedGlowLeft(stack);
         if (left != null) {
-            tooltip.add(Component.translatable("item.neon_glowsticks.glowstick.glow_left", StringUtil.formatTickDuration(left, 20))
+            tooltip.add(Component.translatable("item.neon_glowsticks.glowstick.glow_left", StringUtil.formatTickDuration(left))
                     .withStyle(ChatFormatting.GRAY));
         } else {
             tooltip.add(Component.translatable("item.neon_glowsticks.glowstick.glows_for",
-                    StringUtil.formatTickDuration(Config.glowTicks(), 20)).withStyle(ChatFormatting.GRAY));
+                    StringUtil.formatTickDuration(Config.glowTicks())).withStyle(ChatFormatting.GRAY));
         }
     }
 }

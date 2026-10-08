@@ -33,7 +33,6 @@ import org.joml.Vector3f;
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
-import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModEntities;
 import com.pockyl.neon_glowsticks.registry.ModItems;
 import com.pockyl.neon_glowsticks.registry.ModSounds;
@@ -105,9 +104,9 @@ public final class Glowstick extends Projectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(COLOR, (byte) GlowColor.WHITE.ordinal());
-        builder.define(GLOW_LEFT, Integer.MAX_VALUE);
+    protected void defineSynchedData() {
+        entityData.define(COLOR, (byte) GlowColor.WHITE.ordinal());
+        entityData.define(GLOW_LEFT, Integer.MAX_VALUE);
     }
 
     @Override
@@ -148,7 +147,7 @@ public final class Glowstick extends Projectile {
     public ItemStack toItem() {
         ItemStack stack = new ItemStack(ModItems.glowstick(color()));
         if (glowLeft < Config.glowTicks()) {
-            stack.set(ModDataComponents.GLOW_LEFT.get(), Math.max(1, glowLeft));
+            GlowstickItem.setGlowLeft(stack, Math.max(1, glowLeft));
         }
         return stack;
     }
@@ -252,12 +251,12 @@ public final class Glowstick extends Projectile {
     // "behind" in them; differences explained by that delay are ignored, real divergence is blended in over several
     // ticks, and only a large one snaps.
     @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps, boolean teleport) {
         Vec3 offset = new Vec3(x, y, z).subtract(position());
         double tolerance = 0.25 + getDeltaMovement().length() * 3.0;
         if (offset.length() > 4.0) {
             correction = Vec3.ZERO;
-            super.lerpTo(x, y, z, yRot, xRot, steps);
+            super.lerpTo(x, y, z, yRot, xRot, steps, teleport);
         } else if (offset.length() > tolerance) {
             correction = offset;
         }

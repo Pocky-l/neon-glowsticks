@@ -1,9 +1,10 @@
 package com.pockyl.neon_glowsticks.registry;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
 import com.pockyl.neon_glowsticks.item.GlowColor;
@@ -14,10 +15,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public final class ModItems {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(NeonGlowsticks.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, NeonGlowsticks.MOD_ID);
 
     /** One glowstick per color, registered as {@code <color>_glowstick}. */
-    public static final Map<GlowColor, DeferredItem<GlowstickItem>> GLOWSTICKS = registerGlowsticks();
+    public static final Map<GlowColor, RegistryObject<GlowstickItem>> GLOWSTICKS = registerGlowsticks();
 
     private ModItems() {
     }
@@ -30,8 +31,8 @@ public final class ModItems {
         return GLOWSTICKS.get(color).get();
     }
 
-    private static Map<GlowColor, DeferredItem<GlowstickItem>> registerGlowsticks() {
-        Map<GlowColor, DeferredItem<GlowstickItem>> items = new EnumMap<>(GlowColor.class);
+    private static Map<GlowColor, RegistryObject<GlowstickItem>> registerGlowsticks() {
+        Map<GlowColor, RegistryObject<GlowstickItem>> items = new EnumMap<>(GlowColor.class);
         for (GlowColor color : GlowColor.values()) {
             items.put(color, ITEMS.register(color.getSerializedName() + "_glowstick",
                     () -> new GlowstickItem(color, new Item.Properties().stacksTo(32))));

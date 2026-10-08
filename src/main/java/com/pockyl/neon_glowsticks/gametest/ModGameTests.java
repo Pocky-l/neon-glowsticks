@@ -6,11 +6,10 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
@@ -18,8 +17,9 @@ import com.pockyl.neon_glowsticks.entity.Glowstick;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
 import com.pockyl.neon_glowsticks.light.ColorMixing;
-import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModItems;
+
+import java.util.function.Predicate;
 
 /**
  * In-game tests, run headless by {@code gradlew runGameTestServer}.
@@ -72,12 +72,12 @@ public final class ModGameTests {
         floor(helper);
         Glowstick stick = stick(helper, GlowColor.RED, new Vec3(1.5, 2.2, 1.5));
         stick.setGlowLeft(500);
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        Player player = helper.makeMockPlayer();
         stick.interact(player, InteractionHand.MAIN_HAND);
 
         helper.assertFalse(stick.isAlive(), "the stick was picked up");
-        helper.assertTrue(player.getInventory().contains(stack -> stack.is(ModItems.glowstick(GlowColor.RED))
-                && Integer.valueOf(500).equals(stack.get(ModDataComponents.GLOW_LEFT.get()))), "a red glowstick with 500 ticks left");
+        helper.assertTrue(hasItem(player, stack -> stack.is(ModItems.glowstick(GlowColor.RED))
+                && Integer.valueOf(500).equals(GlowstickItem.storedGlowLeft(stack))), "a red glowstick with 500 ticks left");
         helper.assertTrue(GlowstickItem.glowLeft(new ItemStack(ModItems.glowstick(GlowColor.RED))) == Config.glowTicks(),
                 "a fresh stick glows for the full time");
         helper.succeed();
@@ -87,7 +87,7 @@ public final class ModGameTests {
     public static void hittingKnocksTheStickAway(GameTestHelper helper) {
         floor(helper);
         Glowstick stick = stick(helper, GlowColor.GREEN, new Vec3(1.5, 2.2, 1.5));
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        Player player = helper.makeMockPlayer();
         helper.runAfterDelay(10, () -> {
             helper.assertTrue(stick.hurt(player.damageSources().playerAttack(player), 1.0F), "the hit lands");
             helper.assertTrue(stick.getDeltaMovement().y > 0.1, "the stick is knocked up");
@@ -116,6 +116,15 @@ public final class ModGameTests {
         ColorMixing.additive(single);
         helper.assertTrue(single[0] == 1.0F && single[1] == 0.16F && single[2] == 0.12F, "a single bright color stays the same");
         helper.succeed();
+    }
+
+    private static boolean hasItem(Player player, Predicate<ItemStack> predicate) {
+        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
+            if (predicate.test(player.getInventory().getItem(slot))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static Glowstick stick(GameTestHelper helper, GlowColor color, Vec3 relative) {

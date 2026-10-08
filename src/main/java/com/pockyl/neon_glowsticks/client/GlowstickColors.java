@@ -1,8 +1,8 @@
 package com.pockyl.neon_glowsticks.client;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
@@ -28,9 +28,17 @@ public final class GlowstickColors {
         }
         int rgb = item.color().rgb();
         return switch (tintIndex) {
-            case 0, 2 -> FastColor.ARGB32.opaque(rgb);
-            case 3 -> FastColor.ARGB32.opaque(FastColor.ARGB32.lerp(0.5F, rgb, 0xFFFFFF));
+            case 0, 2 -> 0xFF000000 | rgb;
+            case 3 -> 0xFF000000 | halfwayToWhite(rgb);
             default -> -1;
         };
+    }
+
+    private static int halfwayToWhite(int rgb) {
+        return halfwayTo255(rgb >> 16 & 0xFF) << 16 | halfwayTo255(rgb >> 8 & 0xFF) << 8 | halfwayTo255(rgb & 0xFF);
+    }
+
+    private static int halfwayTo255(int channel) {
+        return channel + Mth.floor((255 - channel) * 0.5F);
     }
 }

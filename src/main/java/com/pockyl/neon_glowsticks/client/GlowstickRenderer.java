@@ -74,12 +74,13 @@ public final class GlowstickRenderer extends EntityRenderer<Glowstick> {
 
     private static void vertex(VertexConsumer consumer, PoseStack.Pose last, Matrix4f matrix, float x, float y, float u, float v,
             float r, float g, float b) {
-        consumer.addVertex(matrix, x, y, 0)
-                .setColor(r, g, b, 1.0F)
-                .setUv(u, v)
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(LightTexture.FULL_BRIGHT)
-                .setNormal(last, 0, 1, 0);
+        consumer.vertex(matrix, x, y, 0)
+                .color(r, g, b, 1.0F)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(LightTexture.FULL_BRIGHT)
+                .normal(last.normal(), 0, 1, 0)
+                .endVertex();
     }
 
     @Override
