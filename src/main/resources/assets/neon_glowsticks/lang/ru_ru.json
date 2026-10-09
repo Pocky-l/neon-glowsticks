@@ -35,8 +35,12 @@
   "neon_glowsticks.configuration.coloredLight.tooltip": "Окрашивать свет палочек в их цвет.",
   "neon_glowsticks.configuration.coloredLightStrength": "Сила цветного света",
   "neon_glowsticks.configuration.coloredLightStrength.tooltip": "Насколько сильно окрашивается свет.",
+  "neon_glowsticks.configuration.heldLight": "Свет палочек в руке",
+  "neon_glowsticks.configuration.heldLight.tooltip": "Палочка в руке освещает всё вокруг того, кто её держит: вас, других игроков и мобов.",
+  "neon_glowsticks.configuration.heldLightLevel": "Уровень света в руке",
+  "neon_glowsticks.configuration.heldLightLevel.tooltip": "Уровень света палочки, которую держат в руке. Палочки в руках входят в максимум источников света.",
   "neon_glowsticks.configuration.halo": "Ореол",
   "neon_glowsticks.configuration.halo.tooltip": "Рисовать мягкое свечение вокруг палочек.",
   "neon_glowsticks.configuration.maxLights": "Максимум источников света",
-  "neon_glowsticks.configuration.maxLights.tooltip": "Сколько ближайших палочек одновременно дают свет. Каждый движущийся свет перерисовывает чанки вокруг себя, на слабых компьютерах уменьшите."
+  "neon_glowsticks.configuration.maxLights.tooltip": "Сколько палочек одновременно дают свет (сначала ваши в руках, затем ближайшие). Каждый движущийся свет перерисовывает чанки вокруг себя, на слабых компьютерах уменьшите."
 }

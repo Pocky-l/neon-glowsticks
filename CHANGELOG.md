@@ -4,6 +4,16 @@ All notable changes to this mod are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - Unreleased
+### Added
+- Glowsticks glow in your hand: a glowstick held in the main hand or off hand lights up the area around you in its
+  color, so you can walk through a cave with one in hand. Other players and mobs holding a glowstick (a zombie that
+  picked one up, an allay carrying one) light up their surroundings too. Two glowsticks in both hands give two lights.
+- Held light is a bit weaker than a thrown stick's (light level 11 by default) and never uses up the stick's glow time.
+  A picked-up stick that was already dimming stays as dim in your hand.
+- New client config options: `heldLight` turns the light of held glowsticks on or off, `heldLightLevel` sets how
+  bright it is. Held glowsticks count towards `maxLights`; your own stick always gets a light first.
+
 ## [1.0.1] - 2026-10-07
 ### Fixed
 - With [Sodium](https://modrinth.com/mod/sodium) installed, blocks around glowsticks were lit but not colored; the

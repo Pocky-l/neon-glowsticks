@@ -4,25 +4,34 @@ import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayFIFOQueue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import org.jetbrains.annotations.Nullable;
 
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
 import com.pockyl.neon_glowsticks.entity.Glowstick;
 import com.pockyl.neon_glowsticks.item.GlowColor;
+import com.pockyl.neon_glowsticks.item.GlowstickItem;
 import com.pockyl.neon_glowsticks.light.ColorMixing;
+import com.pockyl.neon_glowsticks.light.LightPriority;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +50,9 @@ import java.util.Map;
  * Whenever a source moves to another block, changes its strength or the blocks around it change, the chunk sections
  * it reaches are re-meshed. Chunk meshing runs on worker threads, so the sources are published as an immutable
  * snapshot.
+ * <p>
+ * A glowstick held in a hand is a light source too: it shines from the holder's hand and moves with the holder.
+ * Sources are keyed by entity and hand, so the two hands of one holder are two lights.
  */
 @EventBusSubscriber(modid = NeonGlowsticks.MOD_ID, value = Dist.CLIENT)
 public final class DynamicLights {
@@ -49,9 +61,15 @@ public final class DynamicLights {
     /** At most this many sources are (re)built per tick; the rest keep their previous light for a tick. */
     private static final int MAX_BUILDS_PER_TICK = 8;
     private static final Direction[] DIRECTIONS = Direction.values();
+    /** A held stick is at this fraction of the holder's height, and this many widths in front of and beside its center. */
+    private static final double HAND_HEIGHT = 0.5;
+    private static final double HAND_FORWARD = 0.6;
+    private static final double HAND_SIDE = 0.6;
+    /** How far (in blocks) the hand may leave the block a held light shines from before the light moves. */
+    private static final double HELD_ORIGIN_MARGIN = 0.25;
 
     private static volatile LightSource[] sources = new LightSource[0];
-    private static final Map<Integer, LightSource> BY_ENTITY = new HashMap<>();
+    private static final Map<Long, LightSource> BY_KEY = new HashMap<>();
     private static ClientLevel lastLevel;
     private static boolean failed;
 
@@ -69,6 +87,13 @@ public final class DynamicLights {
         boolean reaches(int x, int y, int z) {
             return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
         }
+    }
+
+    /**
+     * A glowstick that may give light this tick, at {@code pos}. {@code body} is set for a held stick only: the holder's
+     * block at hand height, where the light comes from when the hand is inside a wall. {@code own}: held by this player.
+     */
+    private record Candidate(long key, Vec3 pos, @Nullable BlockPos body, int level, GlowColor color, boolean own) {
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -189,7 +214,7 @@ public final class DynamicLights {
                 failed = true;
                 NeonGlowsticks.LOGGER.error("Glowstick lights failed to update; they are turned off for now", e);
             }
-            BY_ENTITY.clear();
+            BY_KEY.clear();
             sources = new LightSource[0];
         }
     }
@@ -198,7 +223,7 @@ public final class DynamicLights {
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
         if (level != lastLevel) {
-            BY_ENTITY.clear();
+            BY_KEY.clear();
             sources = new LightSource[0];
             lastLevel = level;
         }
@@ -206,47 +231,107 @@ public final class DynamicLights {
             return;
         }
         long time = level.getGameTime();
-        Map<Integer, LightSource> previous = new HashMap<>(BY_ENTITY);
-        BY_ENTITY.clear();
+        Vec3 camera = minecraft.gameRenderer.getMainCamera().getPosition();
+        List<Candidate> candidates = LightPriority.select(candidates(level, minecraft.player, camera), Candidate::own,
+                candidate -> candidate.pos().distanceToSqr(camera), Config.maxLights());
+        Map<Long, LightSource> previous = new HashMap<>(BY_KEY);
+        BY_KEY.clear();
         int builds = 0;
-        for (Glowstick stick : nearestSticks(level, minecraft.gameRenderer.getMainCamera().getPosition())) {
-            int lightLevel = stick.lightLevel();
-            if (lightLevel <= 0) {
-                continue;
-            }
-            LightSource old = previous.remove(stick.getId());
-            long origin = stick.blockPosition().asLong();
-            boolean changed = old == null || old.origin() != origin || old.level() != lightLevel || old.color() != stick.color();
+        for (Candidate candidate : candidates) {
+            LightSource old = previous.remove(candidate.key());
+            BlockPos origin = candidate.body() != null ? heldOrigin(level, candidate, old) : BlockPos.containing(candidate.pos());
+            boolean changed = old == null || old.origin() != origin.asLong() || old.level() != candidate.level()
+                    || old.color() != candidate.color();
             boolean refresh = old != null && time - old.builtAt() >= REFRESH_INTERVAL;
             if ((changed || refresh) && (old == null || builds < MAX_BUILDS_PER_TICK)) {
                 builds++;
-                LightSource built = build(level, stick.blockPosition(), lightLevel, stick.color(), time);
+                LightSource built = build(level, origin, candidate.level(), candidate.color(), time);
                 if (changed || !built.light().equals(old.light())) {
                     markDirty(old);
                     markDirty(built);
                 }
-                BY_ENTITY.put(stick.getId(), built);
+                BY_KEY.put(candidate.key(), built);
             } else {
-                BY_ENTITY.put(stick.getId(), old);
+                BY_KEY.put(candidate.key(), old);
             }
         }
-        // Sticks that are gone, picked up or burnt out: their light disappears.
+        // Sticks that are gone, picked up, burnt out or put away: their light disappears.
         for (LightSource gone : previous.values()) {
             markDirty(gone);
         }
-        sources = BY_ENTITY.values().toArray(new LightSource[0]);
+        sources = BY_KEY.values().toArray(new LightSource[0]);
     }
 
-    private static List<Glowstick> nearestSticks(ClientLevel level, Vec3 camera) {
-        List<Glowstick> sticks = new ArrayList<>();
+    /** Every glowstick that could give light now: thrown ones and, unless turned off, those held in a hand. */
+    private static List<Candidate> candidates(ClientLevel level, @Nullable LocalPlayer player, Vec3 camera) {
+        List<Candidate> candidates = new ArrayList<>();
+        boolean held = Config.heldLight();
         for (Entity entity : level.entitiesForRendering()) {
-            if (entity instanceof Glowstick stick && stick.isAlive()) {
-                sticks.add(stick);
+            if (entity instanceof Glowstick stick) {
+                int lightLevel = stick.lightLevel();
+                if (stick.isAlive() && lightLevel > 0) {
+                    candidates.add(new Candidate((long) stick.getId() << 2, stick.position(), null, lightLevel, stick.color(), false));
+                }
+            } else if (held && entity instanceof LivingEntity holder && holdsLight(holder, camera)) {
+                addHeld(candidates, holder, InteractionHand.MAIN_HAND, holder == player);
+                addHeld(candidates, holder, InteractionHand.OFF_HAND, holder == player);
             }
         }
-        sticks.sort(Comparator.comparingDouble(stick -> stick.position().distanceToSqr(camera)));
-        int max = Config.maxLights();
-        return sticks.size() > max ? sticks.subList(0, max) : sticks;
+        return candidates;
+    }
+
+    /** Holders the player cannot see, or whose glowstick is in lava, give no light. */
+    private static boolean holdsLight(LivingEntity holder, Vec3 camera) {
+        return holder.isAlive() && !holder.isSpectator() && !holder.isInvisible() && !holder.isInLava()
+                && holder.shouldRenderAtSqrDistance(holder.distanceToSqr(camera));
+    }
+
+    private static void addHeld(List<Candidate> candidates, LivingEntity holder, InteractionHand hand, boolean own) {
+        ItemStack stack = holder.getItemInHand(hand);
+        if (!(stack.getItem() instanceof GlowstickItem item)) {
+            return;
+        }
+        // Holding a stick never uses up its glow, but a picked-up one that was already dimming stays dim.
+        int lightLevel = Glowstick.lightLevel(Config.heldLightLevel(), GlowstickItem.glowLeft(stack));
+        if (lightLevel <= 0) {
+            return;
+        }
+        HumanoidArm arm = hand == InteractionHand.MAIN_HAND ? holder.getMainArm() : holder.getMainArm().getOpposite();
+        long key = (long) holder.getId() << 2 | (hand == InteractionHand.MAIN_HAND ? 1 : 2);
+        double handY = holder.getY() + holder.getBbHeight() * HAND_HEIGHT;
+        BlockPos body = BlockPos.containing(holder.getX(), handY, holder.getZ());
+        candidates.add(new Candidate(key, handPosition(holder, arm, handY), body, lightLevel, item.color(), own));
+    }
+
+    /** Roughly where the hand on {@code arm} is: a bit in front of the holder and to that side. */
+    private static Vec3 handPosition(LivingEntity holder, HumanoidArm arm, double handY) {
+        float yaw = holder.yBodyRot * Mth.DEG_TO_RAD;
+        double sin = Mth.sin(yaw);
+        double cos = Mth.cos(yaw);
+        double forward = holder.getBbWidth() * HAND_FORWARD;
+        double side = holder.getBbWidth() * HAND_SIDE * (arm == HumanoidArm.RIGHT ? 1 : -1);
+        return new Vec3(holder.getX() - sin * forward - cos * side, handY, holder.getZ() + cos * forward - sin * side);
+    }
+
+    /**
+     * The block a held stick shines from. It stays in the previous block until the hand is clearly out of it, so turning
+     * around on a block edge does not rebuild the light every tick. A hand pushed into a wall shines from the holder's
+     * own block instead, so the light does not leak out on the other side.
+     */
+    private static BlockPos heldOrigin(ClientLevel level, Candidate candidate, @Nullable LightSource old) {
+        Vec3 hand = candidate.pos();
+        if (old != null) {
+            BlockPos previous = BlockPos.of(old.origin());
+            if (new AABB(previous).inflate(HELD_ORIGIN_MARGIN).contains(hand) && !opaque(level, previous)) {
+                return previous;
+            }
+        }
+        BlockPos pos = BlockPos.containing(hand);
+        return opaque(level, pos) ? candidate.body() : pos;
+    }
+
+    private static boolean opaque(ClientLevel level, BlockPos pos) {
+        return level.getBlockState(pos).getLightBlock(level, pos) >= 15;
     }
 
     /** Spreads the light like vanilla block light: one level less per block, blocked by opaque blocks. */

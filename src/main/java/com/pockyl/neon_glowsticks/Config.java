@@ -27,10 +27,18 @@ public final class Config {
             .translation("neon_glowsticks.configuration.coloredLightStrength")
             .defineInRange("coloredLightStrength", 1.0, 0.05, 1.5);
     private static final ModConfigSpec.IntValue MAX_LIGHTS = CLIENT
-            .comment("At most this many glowsticks (the nearest ones) give light at once. Each moving light re-renders the chunks",
-                    "around it, so lower this on weak computers.")
+            .comment("At most this many glowsticks (your own held ones first, then the nearest ones) give light at once. Each moving",
+                    "light re-renders the chunks around it, so lower this on weak computers.")
             .translation("neon_glowsticks.configuration.maxLights")
             .defineInRange("maxLights", 32, 1, 256);
+    private static final ModConfigSpec.BooleanValue HELD_LIGHT = CLIENT
+            .comment("A glowstick held in a hand lights up the area around whoever holds it: you, other players and mobs.")
+            .translation("neon_glowsticks.configuration.heldLight")
+            .define("heldLight", true);
+    private static final ModConfigSpec.IntValue HELD_LIGHT_LEVEL = CLIENT
+            .comment("Light level of a glowstick held in a hand. Held glowsticks count towards maxLights.")
+            .translation("neon_glowsticks.configuration.heldLightLevel")
+            .defineInRange("heldLightLevel", 11, 1, 15);
     private static final ModConfigSpec.BooleanValue HALO = CLIENT
             .comment("Draw a soft glow around glowsticks.")
             .translation("neon_glowsticks.configuration.halo")
@@ -59,6 +67,14 @@ public final class Config {
 
     public static int maxLights() {
         return MAX_LIGHTS.get();
+    }
+
+    public static boolean heldLight() {
+        return HELD_LIGHT.get();
+    }
+
+    public static int heldLightLevel() {
+        return HELD_LIGHT_LEVEL.get();
     }
 
     public static boolean halo() {
