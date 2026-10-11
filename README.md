@@ -5,38 +5,33 @@
 <h1 align="center">Neon Glowsticks</h1>
 
 <p align="center">
-  Throwable glowsticks that bounce, roll and light up the dark with colored light.
+  <b>Throwable glowsticks</b> that bounce, roll and light up the dark with coloured light.
 </p>
 
 <p align="center">
   <a href="https://www.curseforge.com/minecraft/mc-mods/neon-glowsticks"><img alt="CurseForge downloads" src="https://img.shields.io/curseforge/dt/1727688?logo=curseforge&label=CurseForge&color=F16436"></a>
-  <img alt="Minecraft 1.21.1" src="https://img.shields.io/badge/Minecraft-1.21.1-62B47A">
+  <a href="https://www.minecraft.net"><img alt="Minecraft 1.21.1" src="https://img.shields.io/badge/Minecraft-1.21.1-62B47A"></a>
   <a href="https://neoforged.net"><img alt="NeoForge" src="https://img.shields.io/badge/Loader-NeoForge-F16436"></a>
-  <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-blue">
+  <a href="LICENSE"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-blue"></a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/cave.jpg" alt="Thrown glowsticks light up a cave in their own colors" width="720">
 </p>
 
 ## Features
 
-- **16 glowsticks** — one for every dye color: a glowing core inside a clear plastic tube with caps and a lanyard
-  loop, in 3D in hand and on the ground. The black one glows ultraviolet, the brown one amber.
-- **Throw them** — *Use* cracks a glowstick and throws it; *Sneak* + *Use* drops it at your feet.
-  Dispensers shoot glowsticks too.
-- **Real physics** — glowsticks tumble through the air, bounce off walls, floors and mobs, roll when they hit the
-  ground sideways and settle lying flat on one of their sides. They sink slowly in water and drift with the current.
-- **Colored dynamic light** — a thrown glowstick lights up the area around it in its color (light level 13 by
-  default). The light spreads like vanilla light, so walls block it, blends smoothly with Minecraft's shading, lights
-  up mobs and players too, and follows the stick while it flies, rolls or sinks. Several colors mix where their light
-  meets. A soft halo glows around the stick itself.
-- **Glows in your hand** — a glowstick held in the main hand or off hand lights up the area around whoever holds it:
-  you, other players and mobs (a zombie or an allay carrying one). The light follows the holder, so you can walk
-  through a cave with a glowstick in hand. It is a bit weaker than a thrown stick's (light level 11 by default) and
-  holding a stick never uses up its glow; a picked-up stick that was already dimming stays dim. Holders in lava,
-  invisible ones and spectators give no light.
-- **Client-side light** — the light is computed by each player's game and nothing is placed in the world, so it is
-  safe for servers and other mods. It does not stop mobs from spawning.
-- **Burns out** — a glowstick glows for 10 minutes, dims during the last minute and goes out with a puff of smoke.
-- **Pick it back up** — right-click a glowstick in the world to take it back; it keeps the glow it has left (shown in
-  the tooltip). Hitting it knocks it away; fire and lava put it out.
+- 🌈 **16 glowsticks** - one for every dye colour, 3D in hand and on the ground; the black one glows ultraviolet, the
+  brown one amber.
+- 🎯 **Throw them** - *Use* cracks and throws a glowstick, *Sneak* + *Use* drops it at your feet; dispensers shoot them
+  too.
+- 🏀 **Real physics** - they tumble, bounce off walls and mobs, roll and settle flat, sink slowly and drift with the
+  current.
+- 💡 **Coloured dynamic light** that spreads like vanilla light, follows the stick in flight and lights up mobs and
+  players, with a soft halo.
+- ✋ **Glows in your hand** - walk through a cave with one in hand, for you, other players and mobs.
+- ⏳ **Burns out** after 10 minutes with a puff of smoke; pick a stick back up and it keeps the glow it has left.
+- 🛡️ **Client-side light** - nothing is placed in the world: safe for servers and other mods, mobs still spawn.
 
 ## Controls
 
@@ -75,11 +70,9 @@ Client config (`config/neon_glowsticks-client.toml`):
 
 ## Compatibility
 
-The light hooks into Minecraft's own block and entity rendering and into
-[Sodium](https://modrinth.com/mod/sodium)'s chunk renderer, so with Sodium the light is colored too. Other mods
-that replace the chunk renderer (such as Embeddium) may bypass it: the game keeps working, the glowsticks still glow
-and have their halo, but blocks around them may not be lit or colored. The game log says which light hooks are
-active.
+[![Sodium](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/compat/sodium.png)](https://modrinth.com/mod/sodium) ✅ **[Sodium](https://modrinth.com/mod/sodium)** - works, coloured light included.
+
+[![Embeddium](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/compat/embeddium.png)](https://www.curseforge.com/minecraft/mc-mods/embeddium) ❌ **[Embeddium](https://www.curseforge.com/minecraft/mc-mods/embeddium)** - its chunk renderer may bypass the light: sticks glow, blocks around them may stay dark.
 
 ## Installation
 
@@ -105,80 +98,63 @@ The jar is written to `build/libs/`.
 <!-- more-mods:start -->
 ## More mods by Pocky
 
+**🌦️ Weather & nature**
+
 <table>
   <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons"><img src="https://raw.githubusercontent.com/Pocky-l/dhturbo/main/docs/icon.png" width="96" alt="Turbo for Distant Horizons"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons"><b>Turbo for Distant Horizons</b></a><br>
-      Distant Horizons addon: generates distant terrain from the world noise many times faster, with real trees nearby.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1734835?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/dhturbo"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards"><img src="docs/more-mods/hoarfrost.png" width="48" alt="Hoarfrost: Snow & Blizzards"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards"><b>Hoarfrost: Snow & Blizzards</b></a> - seven kinds of snowfall, a living wind and soft snow on the land (<a href="https://github.com/Pocky-l/hoarfrost">source</a>)</td>
   </tr>
   <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards"><img src="https://raw.githubusercontent.com/Pocky-l/hoarfrost/main/docs/icon.png" width="96" alt="Hoarfrost: Snow & Blizzards"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards"><b>Hoarfrost: Snow & Blizzards</b></a><br>
-      Cosy, realistic snowy weather: seven kinds of snowfall and blizzard, flakes carried by a living wind, soft snow settling on the land and a quiet winter soundscape.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1736975?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/hoarfrost"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms"><img src="docs/more-mods/petrichor.png" width="48" alt="Petrichor: Rain & Storms"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms"><b>Petrichor: Rain & Storms</b></a> - realistic rain, puddles, drips and branching lightning (<a href="https://github.com/Pocky-l/petrichor">source</a>)</td>
   </tr>
   <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/holy-staff"><img src="https://raw.githubusercontent.com/Pocky-l/holy-staff/main/docs/icon.png" width="96" alt="Holy Staff"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/holy-staff"><b>Holy Staff</b></a><br>
-      A holy staff with three healing skills, aim previews and flying heal numbers.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/holy-staff"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1725465?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/holy-staff"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/inventory-backups"><img src="https://raw.githubusercontent.com/Pocky-l/inventory-backups/main/docs/icon.png" width="96" alt="Inventory Backups"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/inventory-backups"><b>Inventory Backups</b></a><br>
-      Automatic player inventory and ender chest backups with a clickable chat browser, previews and one-click restore for admins.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/inventory-backups"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/836385?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/inventory-backups"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/lumen-rigs"><img src="https://raw.githubusercontent.com/Pocky-l/lumen-rigs/main/docs/icon.png" width="96" alt="Lumen Rigs"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/lumen-rigs"><b>Lumen Rigs</b></a><br>
-      Aimable spotlights, floodlights, searchlights and soft panels with colored light and visible beams.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/lumen-rigs"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1727739?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/lumen-rigs"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms"><img src="https://raw.githubusercontent.com/Pocky-l/petrichor/main/docs/icon.png" width="96" alt="Petrichor: Rain & Storms"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms"><b>Petrichor: Rain & Storms</b></a><br>
-      Realistic rain and storms: rain types, puddles, runoff and drips, branching lightning with delayed thunder.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1729574?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/petrichor"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/rustling-leaves"><img src="https://raw.githubusercontent.com/Pocky-l/rustling-leaves/main/docs/icon.png" width="96" alt="Rustling Leaves"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/rustling-leaves"><b>Rustling Leaves</b></a><br>
-      Physically simulated leaves: falling leaves, leaf piles you can wade through, rake and blow away, gusts, whirlwinds and leaf tools.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/rustling-leaves"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1729578?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/rustling-leaves"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="112"><a href="https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack"><img src="https://raw.githubusercontent.com/Pocky-l/ranchers-vacpack/main/docs/icon.png" width="96" alt="Rancher's Vacpack"></a></td>
-    <td>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack"><b>Rancher's Vacpack</b></a><br>
-      A Slime Rancher inspired vacuum gun: suck up items and small mobs, store them in a tank and shoot them back out.<br>
-      <a href="https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack"><img alt="CurseForge" src="https://img.shields.io/curseforge/dt/1725381?logo=curseforge&label=CurseForge&color=F16436"></a>
-      <a href="https://github.com/Pocky-l/ranchers-vacpack"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-source-181717?logo=github"></a>
-    </td>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/rustling-leaves"><img src="docs/more-mods/rustling_leaves.png" width="48" alt="Rustling Leaves"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/rustling-leaves"><b>Rustling Leaves</b></a> - falling leaves and leaf piles you can wade through, rake and blow away (<a href="https://github.com/Pocky-l/rustling-leaves">source</a>)</td>
   </tr>
 </table>
+
+**💡 Light**
+
+<table>
+  <tr>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/lumen-rigs"><img src="docs/more-mods/lumen_rigs.png" width="48" alt="Lumen Rigs"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/lumen-rigs"><b>Lumen Rigs</b></a> - aimable spotlights and floodlights with colored light and visible beams (<a href="https://github.com/Pocky-l/lumen-rigs">source</a>)</td>
+  </tr>
+</table>
+
+**🎨 Graphics & performance**
+
+<table>
+  <tr>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons"><img src="docs/more-mods/dhturbo.png" width="48" alt="Turbo for Distant Horizons"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons"><b>Turbo for Distant Horizons</b></a> - Distant Horizons terrain generated many times faster (<a href="https://github.com/Pocky-l/dhturbo">source</a>)</td>
+  </tr>
+</table>
+
+**⚔️ Gear & gameplay**
+
+<table>
+  <tr>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/holy-staff"><img src="docs/more-mods/holy_staff.png" width="48" alt="Holy Staff"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/holy-staff"><b>Holy Staff</b></a> - a healing staff with three skills and flying heal numbers (<a href="https://github.com/Pocky-l/holy-staff">source</a>)</td>
+  </tr>
+  <tr>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack"><img src="docs/more-mods/vacpack.png" width="48" alt="Rancher's Vacpack"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack"><b>Rancher's Vacpack</b></a> - a Slime Rancher vacuum gun for items and small mobs (<a href="https://github.com/Pocky-l/ranchers-vacpack">source</a>)</td>
+  </tr>
+</table>
+
+**🛠️ Server tools**
+
+<table>
+  <tr>
+    <td width="56"><a href="https://www.curseforge.com/minecraft/mc-mods/inventory-backups"><img src="docs/more-mods/inventorybackups.png" width="48" alt="Inventory Backups"></a></td>
+    <td><a href="https://www.curseforge.com/minecraft/mc-mods/inventory-backups"><b>Inventory Backups</b></a> - inventory and ender chest backups with one-click restore for admins (<a href="https://github.com/Pocky-l/inventory-backups">source</a>)</td>
+  </tr>
+</table>
+
 <!-- more-mods:end -->
 
 ## License

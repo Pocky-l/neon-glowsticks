@@ -1,87 +1,71 @@
 # Neon Glowsticks
 
-Throwable glowsticks that bounce, roll and light up the dark with colored light.
+**Throwable glowsticks** that bounce, roll and light up the dark with coloured light.
 
 ![Thrown glowsticks light up a cave in their own colors](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/screenshots/cave.jpg)
 
-*Thrown glowsticks light up a cave in their own colors*
+📦 **Requires** [NeoForge](https://neoforged.net) 1.21.1 on client and server
 
-## Features
+## ✨ Features
 
-- **16 glowsticks**: one for every dye color, with 3D models in hand and on the ground. The black one glows
-  ultraviolet, the brown one amber.
-- **Throw them**: *Use* cracks a glowstick and throws it, *Sneak* + *Use* drops it at your feet. Dispensers shoot
-  glowsticks too.
-- **Real physics**: glowsticks tumble through the air, bounce off walls, floors and mobs, roll when they land sideways
-  and settle lying flat. They sink slowly in water and drift with the current.
-- **Colored dynamic light**: a thrown glowstick lights up the area around it in its color. The light spreads like
-  vanilla light (walls block it), blends with Minecraft's smooth shading, lights up mobs and players and follows the
-  stick while it flies, rolls or sinks. A soft halo glows around the stick.
-- **Glows in your hand**: a glowstick held in either hand lights up the area around whoever holds it (you, other
-  players and mobs), so you can walk through a cave with one in hand. It is a bit weaker than a thrown stick and
-  holding it never uses up its glow.
-- **Client-side light**: nothing is placed in the world, so it is safe for servers and other mods. It does not stop
-  mobs from spawning.
-- **Burns out**: a glowstick glows for 10 minutes, dims during the last minute and goes out with a puff of smoke.
-- **Pick it back up**: right-click a glowstick to take it back, it keeps the glow it has left. Hitting it knocks it
-  away, fire and lava put it out.
+- 🌈 **16 glowsticks** - one for every dye colour, 3D in hand and on the ground; the black one glows ultraviolet, the
+  brown one amber.
+- 🎯 **Throw them** - *Use* cracks and throws a glowstick, *Sneak* + *Use* drops it at your feet; dispensers shoot them
+  too.
+- 🏀 **Real physics** - they tumble, bounce off walls and mobs, roll and settle flat, sink slowly and drift with the
+  current.
+- 💡 **Coloured dynamic light** that spreads like vanilla light, follows the stick in flight and lights up mobs and
+  players, with a soft halo.
+- ✋ **Glows in your hand** - walk through a cave with one in hand, for you, other players and mobs.
+- ⏳ **Burns out** after 10 minutes with a puff of smoke; pick a stick back up and it keeps the glow it has left.
+- 🛡️ **Client-side light** - nothing is placed in the world: safe for servers and other mods, mobs still spawn.
 
-## Crafting
+## ⛏️ Crafting
 
-Shapeless: **Copper Ingot** + **Glowstone Dust** or **Glow Ink Sac** + any **Dye** gives 4 glowsticks of that color.
+Shapeless: **Copper Ingot** + **Glowstone Dust** or **Glow Ink Sac** + any **Dye** = 4 glowsticks of that colour.
 
-## Configuration
+## ⚙️ Configuration
 
-Glow time is in the common config; light level, held light, color strength, the number of lights and the halo are in
-the client config. Both are editable from the in-game mod list.
+Glow time (common config); light level, held light, colour strength, number of lights and the halo (client config) -
+both in the in-game mod list.
 
-## Compatibility
+## 🤝 Compatibility
 
-Works with [Sodium](https://modrinth.com/mod/sodium), colored light included. Other mods that replace the chunk
-renderer (such as Embeddium) may bypass the light: the game keeps working and the sticks still glow, but blocks around
-them may not be lit.
+[![Sodium](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/compat/sodium.png)](https://modrinth.com/mod/sodium) ✅ **[Sodium](https://modrinth.com/mod/sodium)** - works, coloured light included.
 
-## Requirements
+[![Embeddium](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/compat/embeddium.png)](https://www.curseforge.com/minecraft/mc-mods/embeddium) ❌ **[Embeddium](https://www.curseforge.com/minecraft/mc-mods/embeddium)** - its chunk renderer may bypass the light: sticks glow, blocks around them may stay dark.
 
-[NeoForge](https://neoforged.net) 1.21.1. Needed on both the client and the server.
+## 💛 Credits
 
-## Credits
-
-Made by **Pocky**. Source code: [GitHub](https://github.com/Pocky-l/neon-glowsticks)
+Made by **Pocky** · [source code](https://github.com/Pocky-l/neon-glowsticks)
 
 <!-- more-mods:start -->
 ## More mods by Pocky
 
-[![Turbo for Distant Horizons](https://raw.githubusercontent.com/Pocky-l/dhturbo/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons)
+**🌦️ Weather & nature**
 
-**[Turbo for Distant Horizons](https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons)** - Distant Horizons addon: generates distant terrain from the world noise many times faster, with real trees nearby. ([source](https://github.com/Pocky-l/dhturbo))
+[![Hoarfrost: Snow & Blizzards](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/hoarfrost.png)](https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards) **[Hoarfrost: Snow & Blizzards](https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards)** - seven kinds of snowfall, a living wind and soft snow on the land
 
-[![Hoarfrost: Snow & Blizzards](https://raw.githubusercontent.com/Pocky-l/hoarfrost/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards)
+[![Petrichor: Rain & Storms](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/petrichor.png)](https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms) **[Petrichor: Rain & Storms](https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms)** - realistic rain, puddles, drips and branching lightning
 
-**[Hoarfrost: Snow & Blizzards](https://www.curseforge.com/minecraft/mc-mods/hoarfrost-snow-blizzards)** - Cosy, realistic snowy weather: seven kinds of snowfall and blizzard, flakes carried by a living wind, soft snow settling on the land and a quiet winter soundscape. ([source](https://github.com/Pocky-l/hoarfrost))
+[![Rustling Leaves](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/rustling_leaves.png)](https://www.curseforge.com/minecraft/mc-mods/rustling-leaves) **[Rustling Leaves](https://www.curseforge.com/minecraft/mc-mods/rustling-leaves)** - falling leaves and leaf piles you can wade through, rake and blow away
 
-[![Holy Staff](https://raw.githubusercontent.com/Pocky-l/holy-staff/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/holy-staff)
+**💡 Light**
 
-**[Holy Staff](https://www.curseforge.com/minecraft/mc-mods/holy-staff)** - A holy staff with three healing skills, aim previews and flying heal numbers. ([source](https://github.com/Pocky-l/holy-staff))
+[![Lumen Rigs](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/lumen_rigs.png)](https://www.curseforge.com/minecraft/mc-mods/lumen-rigs) **[Lumen Rigs](https://www.curseforge.com/minecraft/mc-mods/lumen-rigs)** - aimable spotlights and floodlights with colored light and visible beams
 
-[![Inventory Backups](https://raw.githubusercontent.com/Pocky-l/inventory-backups/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/inventory-backups)
+**🎨 Graphics & performance**
 
-**[Inventory Backups](https://www.curseforge.com/minecraft/mc-mods/inventory-backups)** - Automatic player inventory and ender chest backups with a clickable chat browser, previews and one-click restore for admins. ([source](https://github.com/Pocky-l/inventory-backups))
+[![Turbo for Distant Horizons](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/dhturbo.png)](https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons) **[Turbo for Distant Horizons](https://www.curseforge.com/minecraft/mc-mods/turbo-for-distant-horizons)** - Distant Horizons terrain generated many times faster
 
-[![Lumen Rigs](https://raw.githubusercontent.com/Pocky-l/lumen-rigs/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/lumen-rigs)
+**⚔️ Gear & gameplay**
 
-**[Lumen Rigs](https://www.curseforge.com/minecraft/mc-mods/lumen-rigs)** - Aimable spotlights, floodlights, searchlights and soft panels with colored light and visible beams. ([source](https://github.com/Pocky-l/lumen-rigs))
+[![Holy Staff](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/holy_staff.png)](https://www.curseforge.com/minecraft/mc-mods/holy-staff) **[Holy Staff](https://www.curseforge.com/minecraft/mc-mods/holy-staff)** - a healing staff with three skills and flying heal numbers
 
-[![Petrichor: Rain & Storms](https://raw.githubusercontent.com/Pocky-l/petrichor/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms)
+[![Rancher's Vacpack](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/vacpack.png)](https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack) **[Rancher's Vacpack](https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack)** - a Slime Rancher vacuum gun for items and small mobs
 
-**[Petrichor: Rain & Storms](https://www.curseforge.com/minecraft/mc-mods/petrichor-rain-storms)** - Realistic rain and storms: rain types, puddles, runoff and drips, branching lightning with delayed thunder. ([source](https://github.com/Pocky-l/petrichor))
+**🛠️ Server tools**
 
-[![Rustling Leaves](https://raw.githubusercontent.com/Pocky-l/rustling-leaves/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/rustling-leaves)
-
-**[Rustling Leaves](https://www.curseforge.com/minecraft/mc-mods/rustling-leaves)** - Physically simulated leaves: falling leaves, leaf piles you can wade through, rake and blow away, gusts, whirlwinds and leaf tools. ([source](https://github.com/Pocky-l/rustling-leaves))
-
-[![Rancher's Vacpack](https://raw.githubusercontent.com/Pocky-l/ranchers-vacpack/main/docs/icon.png)](https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack)
-
-**[Rancher's Vacpack](https://www.curseforge.com/minecraft/mc-mods/ranchers-vacpack)** - A Slime Rancher inspired vacuum gun: suck up items and small mobs, store them in a tank and shoot them back out. ([source](https://github.com/Pocky-l/ranchers-vacpack))
+[![Inventory Backups](https://raw.githubusercontent.com/Pocky-l/neon-glowsticks/main/docs/more-mods/inventorybackups.png)](https://www.curseforge.com/minecraft/mc-mods/inventory-backups) **[Inventory Backups](https://www.curseforge.com/minecraft/mc-mods/inventory-backups)** - inventory and ender chest backups with one-click restore for admins
 
 <!-- more-mods:end -->
