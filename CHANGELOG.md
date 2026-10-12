@@ -4,7 +4,7 @@ All notable changes to this mod are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] - Unreleased
+## [1.2.0] - 2026-10-13
 ### Added
 - Glowsticks mark mobs: a thrown glowstick that hits a mob or player marks it for 30 seconds. A marked mob shows an
   outline in the stick's color, visible through walls, and carries the stick's colored light with it, so a creeper in
