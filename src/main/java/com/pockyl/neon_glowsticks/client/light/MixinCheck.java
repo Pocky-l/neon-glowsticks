@@ -1,8 +1,10 @@
 package com.pockyl.neon_glowsticks.client.light;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.fml.ModList;
 
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
@@ -21,6 +23,8 @@ public final class MixinCheck {
         report("block light", LevelRenderer.class);
         report("block color", ModelBlockRenderer.class);
         report("entity light", EntityRenderer.class);
+        report("mark outline", Minecraft.class);
+        report("mark color", Entity.class);
         if (ModList.get().isLoaded("sodium")) {
             try {
                 report("Sodium block color", Class.forName("net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer"));

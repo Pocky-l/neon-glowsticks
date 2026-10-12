@@ -4,8 +4,10 @@
   "package": "com.pockyl.neon_glowsticks.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "EntityMixin",
     "EntityRendererMixin",
     "LevelRendererMixin",
+    "MinecraftMixin",
     "ModelBlockRendererMixin"
   ],
   "injectors": {

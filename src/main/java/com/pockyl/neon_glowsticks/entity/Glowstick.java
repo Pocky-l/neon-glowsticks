@@ -1,5 +1,6 @@
 package com.pockyl.neon_glowsticks.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -20,11 +21,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -33,10 +33,13 @@ import org.joml.Vector3f;
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
+import com.pockyl.neon_glowsticks.mark.GlowMarks;
 import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModEntities;
 import com.pockyl.neon_glowsticks.registry.ModItems;
 import com.pockyl.neon_glowsticks.registry.ModSounds;
+
+import java.util.Optional;
 
 /**
  * A cracked glowstick in the world. It flies, bounces off blocks and mobs, rolls and comes to rest lying on one of its
@@ -55,10 +58,14 @@ public final class Glowstick extends Projectile {
     private static final double WATER_DRAG = 0.85;
     private static final double GROUND_FRICTION = 0.82;
     private static final double RESTITUTION = 0.45;
+    /** Slime blocks throw the stick back up almost as fast as it came. */
+    private static final double SLIME_RESTITUTION = 0.85;
     /** Bounces slower than this along an axis just stop instead of jittering. */
     private static final double MIN_BOUNCE = 0.09;
     private static final double BOUNCE_SOUND_IMPACT = 0.12;
     private static final int ENTITY_HIT_COOLDOWN = 10;
+    /** Mobs are hit a little outside their box, like vanilla projectiles. */
+    private static final double HIT_MARGIN = 0.3;
     private static final int GLOW_SYNC_INTERVAL = 20;
 
     private static final EntityDataAccessor<Byte> COLOR = SynchedEntityData.defineId(Glowstick.class, EntityDataSerializers.BYTE);
@@ -212,12 +219,13 @@ public final class Glowstick extends Projectile {
         }
         move(MoverType.SELF, velocity);
         Vec3 moved = position().subtract(before);
+        boolean slime = velocity.y < 0 && moved.y > velocity.y && onSlime();
         Vec3 bounced = new Vec3(
-                bounceAxis(velocity.x, moved.x),
-                bounceAxis(velocity.y, moved.y),
-                bounceAxis(velocity.z, moved.z));
+                bounceAxis(velocity.x, moved.x, RESTITUTION),
+                bounceAxis(velocity.y, moved.y, slime ? SLIME_RESTITUTION : RESTITUTION),
+                bounceAxis(velocity.z, moved.z, RESTITUTION));
         double impact = velocity.subtract(bounced).length();
-        if (onGround()) {
+        if (onGround() && !(slime && bounced.y > 0)) {
             bounced = new Vec3(bounced.x * GROUND_FRICTION, bounced.y, bounced.z * GROUND_FRICTION);
         }
         bounced = bounced.scale(water ? WATER_DRAG : AIR_DRAG);
@@ -226,12 +234,16 @@ public final class Glowstick extends Projectile {
     }
 
     /** Reflects the velocity along an axis where movement was blocked; small bounces die out. */
-    private static double bounceAxis(double intended, double actual) {
+    private static double bounceAxis(double intended, double actual, double restitution) {
         if (Math.abs(intended - actual) < 1.0E-4) {
             return intended;
         }
-        double reflected = -intended * RESTITUTION;
+        double reflected = -intended * restitution;
         return Math.abs(reflected) < MIN_BOUNCE ? 0 : reflected;
+    }
+
+    private boolean onSlime() {
+        return level().getBlockState(BlockPos.containing(getX(), getY() - 0.05, getZ())).is(Blocks.SLIME_BLOCK);
     }
 
     /** Bounces off each mob in the path, at most once in a while. */
@@ -239,10 +251,8 @@ public final class Glowstick extends Projectile {
         if (velocity.lengthSqr() < 0.04) {
             return;
         }
-        Vec3 from = position();
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(level(), this, from, from.add(velocity),
-                getBoundingBox().expandTowards(velocity).inflate(0.2), this::canHitEntity);
-        if (hit == null || !(hit.getEntity() instanceof LivingEntity target)) {
+        LivingEntity target = findHit(position(), velocity);
+        if (target == null) {
             return;
         }
         if (target.getId() == lastHitEntity && tickCount - lastHitTick < ENTITY_HIT_COOLDOWN) {
@@ -252,8 +262,43 @@ public final class Glowstick extends Projectile {
         lastHitTick = tickCount;
         if (!level().isClientSide()) {
             playSound(ModSounds.BOUNCE.get(), 0.6F, 1.0F);
+            GlowMarks.mark(target, color());
         }
         setDeltaMovement(velocity.scale(-0.3).add(0, 0.15, 0));
+    }
+
+    /**
+     * The nearest mob the stick flies into this tick. Unlike {@code ProjectileUtil.getEntityHitResult}, a stick that is
+     * already inside a mob's (slightly enlarged) box counts as a hit: falling onto a mob it often gets that close in one
+     * step without the step crossing the box's edge, and passed straight through.
+     */
+    @Nullable
+    private LivingEntity findHit(Vec3 from, Vec3 velocity) {
+        Vec3 to = from.add(velocity);
+        AABB sweep = getBoundingBox().expandTowards(velocity).inflate(HIT_MARGIN + 0.2);
+        LivingEntity best = null;
+        double bestDistance = Double.MAX_VALUE;
+        for (Entity entity : level().getEntities(this, sweep, this::canHitEntity)) {
+            if (!(entity instanceof LivingEntity living)) {
+                continue;
+            }
+            AABB box = entity.getBoundingBox().inflate(HIT_MARGIN);
+            double distance;
+            if (box.contains(from)) {
+                distance = 0;
+            } else {
+                Optional<Vec3> entry = box.clip(from, to);
+                if (entry.isEmpty()) {
+                    continue;
+                }
+                distance = from.distanceToSqr(entry.get());
+            }
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                best = living;
+            }
+        }
+        return best;
     }
 
     @Override

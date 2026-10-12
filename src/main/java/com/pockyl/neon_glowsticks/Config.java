@@ -9,6 +9,11 @@ public final class Config {
             .comment("How long a cracked glowstick glows, in seconds. It dims during the last minute.")
             .translation("neon_glowsticks.configuration.glowSeconds")
             .defineInRange("glowSeconds", 600, 10, 86400);
+    private static final ModConfigSpec.IntValue MARK_SECONDS = BUILDER
+            .comment("How long a mob or player hit by a thrown glowstick stays marked (outline and light in the stick's color), in seconds.",
+                    "0 turns marking off.")
+            .translation("neon_glowsticks.configuration.markSeconds")
+            .defineInRange("markSeconds", 30, 0, 3600);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
@@ -39,6 +44,10 @@ public final class Config {
             .comment("Light level of a glowstick held in a hand. Held glowsticks count towards maxLights.")
             .translation("neon_glowsticks.configuration.heldLightLevel")
             .defineInRange("heldLightLevel", 11, 1, 15);
+    private static final ModConfigSpec.BooleanValue MARK_LIGHT = CLIENT
+            .comment("Whether mobs marked by a glowstick carry a light in its color (their outline shows either way).")
+            .translation("neon_glowsticks.configuration.markLight")
+            .define("markLight", true);
     private static final ModConfigSpec.BooleanValue HALO = CLIENT
             .comment("Draw a soft glow around glowsticks.")
             .translation("neon_glowsticks.configuration.halo")
@@ -51,6 +60,20 @@ public final class Config {
 
     public static int glowTicks() {
         return GLOW_SECONDS.get() * 20;
+    }
+
+    /** Mark duration in ticks; 0 when marking is off. */
+    public static int markTicks() {
+        return (SPEC.isLoaded() ? MARK_SECONDS.get() : MARK_SECONDS.getDefault()) * 20;
+    }
+
+    /** For game tests; not saved to the file. */
+    public static void setMarkSeconds(int seconds) {
+        MARK_SECONDS.set(seconds);
+    }
+
+    public static boolean markLight() {
+        return MARK_LIGHT.get();
     }
 
     public static int lightLevel() {

@@ -12,8 +12,10 @@
   brown one amber.
 - 🎯 **Throw them** - *Use* cracks and throws a glowstick, *Sneak* + *Use* drops it at your feet; dispensers shoot them
   too.
-- 🏀 **Real physics** - they tumble, bounce off walls and mobs, roll and settle flat, sink slowly and drift with the
+- 🏀 **Real physics** - they tumble, bounce off walls and mobs (high on slime blocks), roll and settle flat, sink slowly and drift with the
   current.
+- 🎯 **Mark mobs** - a glowstick that hits a mob makes it glow through walls in the stick's colour and carry its
+  light for 30 seconds, so you always know where it is.
 - 💡 **Coloured dynamic light** that spreads like vanilla light, follows the stick in flight and lights up mobs and
   players, with a soft halo.
 - ✋ **Glows in your hand** - walk through a cave with one in hand, for you, other players and mobs.

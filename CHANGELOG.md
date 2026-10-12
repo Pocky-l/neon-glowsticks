@@ -4,6 +4,18 @@ All notable changes to this mod are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - Unreleased
+### Added
+- Glowsticks mark mobs: a thrown glowstick that hits a mob or player marks it for 30 seconds. A marked mob shows an
+  outline in the stick's color, visible through walls, and carries the stick's colored light with it, so a creeper in
+  a dark cave can no longer sneak up on you. A new hit changes the color and starts the time again.
+- Glowsticks bounce high off slime blocks.
+- New options: `markSeconds` (common) sets how long a mark lasts, 0 turns marking off; `markLight` (client) turns
+  the light on marked mobs off.
+
+### Fixed
+- A glowstick dropped or thrown down onto a mob sometimes fell straight through it instead of bouncing off.
+
 ## [1.1.0] - 2026-10-09
 ### Added
 - Glowsticks glow in your hand: a glowstick held in the main hand or off hand lights up the area around you in its

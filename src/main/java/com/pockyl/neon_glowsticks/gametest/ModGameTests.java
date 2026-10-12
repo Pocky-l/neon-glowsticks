@@ -4,6 +4,8 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -19,6 +21,8 @@ import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
 import com.pockyl.neon_glowsticks.light.ColorMixing;
 import com.pockyl.neon_glowsticks.light.LightPriority;
+import com.pockyl.neon_glowsticks.mark.GlowMark;
+import com.pockyl.neon_glowsticks.mark.GlowMarks;
 import com.pockyl.neon_glowsticks.registry.ModDataComponents;
 import com.pockyl.neon_glowsticks.registry.ModItems;
 
@@ -96,6 +100,38 @@ public final class ModGameTests {
             helper.assertTrue(stick.getDeltaMovement().y > 0.1, "the stick is knocked up");
             stick.discard();
             helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 60, batch = "hitMobIsMarkedInTheSticksColor")
+    public static void hitMobIsMarkedInTheSticksColor(GameTestHelper helper) {
+        floor(helper);
+        Cow cow = helper.spawnWithNoFreeWill(EntityType.COW, new Vec3(1.5, 2, 1.5));
+        cow.setNoGravity(true);
+        helper.assertTrue(GlowMarks.get(cow) == GlowMark.NONE, "a fresh cow is not marked");
+        Glowstick stick = stick(helper, GlowColor.MAGENTA, new Vec3(1.5, 4.2, 1.5));
+        stick.setDeltaMovement(0, -0.6, 0);
+        helper.succeedWhen(() -> {
+            GlowMark mark = GlowMarks.get(cow);
+            helper.assertTrue(mark != GlowMark.NONE && mark.color() == GlowColor.MAGENTA, "the cow is marked magenta");
+            long left = mark.until() - helper.getLevel().getGameTime();
+            helper.assertTrue(left > Config.markTicks() - 40 && left <= Config.markTicks(), "for the configured time, left " + left);
+            stick.discard();
+            cow.discard();
+        });
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 100, batch = "sticksBounceHighOnSlime")
+    public static void sticksBounceHighOnSlime(GameTestHelper helper) {
+        floor(helper);
+        helper.setBlock(1, 1, 1, Blocks.SLIME_BLOCK);
+        Glowstick stick = stick(helper, GlowColor.LIME, new Vec3(1.5, 4.5, 1.5));
+        double[] fastestUp = {0};
+        helper.onEachTick(() -> fastestUp[0] = Math.max(fastestUp[0], stick.getDeltaMovement().y));
+        // A fall of 2.5 blocks hits at about 0.48 blocks per tick; stone throws it back at 0.22, slime at about 0.4.
+        helper.succeedWhen(() -> {
+            helper.assertTrue(fastestUp[0] > 0.32, "the stick bounced high, fastest upward speed " + fastestUp[0]);
+            stick.discard();
         });
     }
 

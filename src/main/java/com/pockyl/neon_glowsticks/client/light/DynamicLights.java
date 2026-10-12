@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.pockyl.neon_glowsticks.Config;
 import com.pockyl.neon_glowsticks.NeonGlowsticks;
+import com.pockyl.neon_glowsticks.client.ClientGlowMarks;
 import com.pockyl.neon_glowsticks.entity.Glowstick;
 import com.pockyl.neon_glowsticks.item.GlowColor;
 import com.pockyl.neon_glowsticks.item.GlowstickItem;
@@ -52,7 +53,8 @@ import java.util.Map;
  * snapshot.
  * <p>
  * A glowstick held in a hand is a light source too: it shines from the holder's hand and moves with the holder.
- * Sources are keyed by entity and hand, so the two hands of one holder are two lights.
+ * Sources are keyed by entity and hand, so the two hands of one holder are two lights. A mob marked by a glowstick hit
+ * carries a light of the stick's color at its middle.
  */
 @EventBusSubscriber(modid = NeonGlowsticks.MOD_ID, value = Dist.CLIENT)
 public final class DynamicLights {
@@ -262,10 +264,11 @@ public final class DynamicLights {
         sources = BY_KEY.values().toArray(new LightSource[0]);
     }
 
-    /** Every glowstick that could give light now: thrown ones and, unless turned off, those held in a hand. */
+    /** Every glowstick that could give light now: thrown ones and, unless turned off, those held in a hand and marked mobs. */
     private static List<Candidate> candidates(ClientLevel level, @Nullable LocalPlayer player, Vec3 camera) {
         List<Candidate> candidates = new ArrayList<>();
         boolean held = Config.heldLight();
+        boolean marks = Config.markLight();
         for (Entity entity : level.entitiesForRendering()) {
             if (entity instanceof Glowstick stick) {
                 int lightLevel = stick.lightLevel();
@@ -275,6 +278,15 @@ public final class DynamicLights {
             } else if (held && entity instanceof LivingEntity holder && holdsLight(holder, camera)) {
                 addHeld(candidates, holder, InteractionHand.MAIN_HAND, holder == player);
                 addHeld(candidates, holder, InteractionHand.OFF_HAND, holder == player);
+            }
+            if (marks && entity instanceof LivingEntity marked && holdsLight(marked, camera)) {
+                GlowColor color = ClientGlowMarks.color(marked);
+                if (color != null) {
+                    double middle = marked.getY() + marked.getBbHeight() * HAND_HEIGHT;
+                    BlockPos body = BlockPos.containing(marked.getX(), middle, marked.getZ());
+                    candidates.add(new Candidate((long) marked.getId() << 2 | 3, new Vec3(marked.getX(), middle, marked.getZ()), body,
+                            Config.heldLightLevel(), color, marked == player));
+                }
             }
         }
         return candidates;

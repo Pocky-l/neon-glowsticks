@@ -25,8 +25,10 @@
   brown one amber.
 - 🎯 **Throw them** - *Use* cracks and throws a glowstick, *Sneak* + *Use* drops it at your feet; dispensers shoot them
   too.
-- 🏀 **Real physics** - they tumble, bounce off walls and mobs, roll and settle flat, sink slowly and drift with the
+- 🏀 **Real physics** - they tumble, bounce off walls and mobs (high on slime blocks), roll and settle flat, sink slowly and drift with the
   current.
+- 🎯 **Mark mobs** - a glowstick that hits a mob makes it glow through walls in the stick's colour and carry its
+  light for 30 seconds, so you always know where it is.
 - 💡 **Coloured dynamic light** that spreads like vanilla light, follows the stick in flight and lights up mobs and
   players, with a soft halo.
 - ✋ **Glows in your hand** - walk through a cave with one in hand, for you, other players and mobs.
@@ -55,6 +57,7 @@ Common config (`config/neon_glowsticks-common.toml`, also editable from the in-g
 | Option | Default | |
 |---|---|---|
 | `glowSeconds` | 600 | how long a thrown glowstick glows |
+| `markSeconds` | 30 | how long a mob hit by a glowstick stays marked (0 = no marks) |
 
 Client config (`config/neon_glowsticks-client.toml`):
 
@@ -65,7 +68,8 @@ Client config (`config/neon_glowsticks-client.toml`):
 | `coloredLightStrength` | 1.0 | how strong the tint is |
 | `maxLights` | 32 | how many of the nearest glowsticks give light at once (held ones included; your own comes first) |
 | `heldLight` | true | glowsticks held in a hand give light |
-| `heldLightLevel` | 11 | light level of a glowstick held in a hand |
+| `heldLightLevel` | 11 | light level of a glowstick held in a hand, and of the light on a marked mob |
+| `markLight` | true | mobs marked by a glowstick carry its light |
 | `halo` | true | soft glow around the sticks |
 
 ## Compatibility
