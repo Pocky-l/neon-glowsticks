@@ -1,8 +1,11 @@
 package com.pockyl.neon_glowsticks.gametest;
 
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.SectionPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
@@ -41,6 +44,20 @@ public final class ModGameTests {
 
     @GameTest(template = "empty", batch = "modLoads")
     public static void modLoads(GameTestHelper helper) {
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", batch = "recipesUnlockWithGlowstone")
+    public static void recipesUnlockWithGlowstone(GameTestHelper helper) {
+        ResourceLocation recipe = NeonGlowsticks.id("lime_glowstick_from_glowstone_dust");
+        AdvancementHolder unlock = helper.getLevel().getServer().getAdvancements()
+                .get(NeonGlowsticks.id("recipes/equipment/lime_glowstick_from_glowstone_dust"));
+        helper.assertTrue(unlock != null, "every glowstick recipe has an unlock advancement");
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        helper.assertFalse(player.getRecipeBook().contains(recipe), "a new player does not know the recipe");
+        player.getAdvancements().award(unlock, "has_glow");
+        helper.assertTrue(player.getRecipeBook().contains(recipe), "glowstone dust in the inventory unlocks the recipe");
+        player.discard();
         helper.succeed();
     }
 

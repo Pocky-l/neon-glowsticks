@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_glow": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:glowstone_dust",
+              "minecraft:glow_ink_sac"
+            ]
+          }
+        ]
+      }
+    },
+    "has_glowstick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#neon_glowsticks:glowsticks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "neon_glowsticks:gray_glowstick_from_glowstone_dust"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_glow",
+      "has_glowstick",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "neon_glowsticks:gray_glowstick_from_glowstone_dust"
+    ]
+  }
+}
